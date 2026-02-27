@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Books API Lab</title>
+</head>
+<body>
+
+  <h1>My Favorite Books</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>ISBN</th>
+      </tr>
+    </thead>
+    <tbody id="books-table">
+    </tbody>
+  </table>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+    const supabaseUrl = 'https://fzriubzqrfafauxcinhw.supabase.co'
+    const supabaseKey = 'sb_publishable_AyI1vtQfSKHe_YcFClo9mQ_EZFOFt3CE'
+
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    async function getBooks() {
+      const { data, error } = await supabase
+        .from('books')
+        .select('*')
+
+      if (error) {
+        console.error('Error fetching books:', error)
+        return
+      }
+
+      const tableBody = document.getElementById('books-table')
+
+      data.forEach(book => {
+        const row = document.createElement('tr')
+        row.innerHTML = `
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td>${book.isbn}</td>
+        `
+        tableBody.appendChild(row)
+      })
+    }
+
+    getBooks()
+  </script>
+
+</body>
+</html>
